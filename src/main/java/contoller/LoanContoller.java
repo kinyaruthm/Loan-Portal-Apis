@@ -19,7 +19,7 @@ import services.LoanService;
 import services.MemberService;
 
 @Stateless
-@Path("loan")
+@Path("")
 public class LoanContoller {
     @Inject
     private DBConnectionService db;
@@ -44,7 +44,7 @@ public class LoanContoller {
         try {
             BasicResponse res = new BasicResponse();
             LoanService service = new LoanService();
-            res.setData(service.getLoans(db.getConnection()));
+            res=service.getLoans(db.getConnection());
             res.setStatus(0);
             res.setMessage("success");
             return Response.ok().entity(res).build();

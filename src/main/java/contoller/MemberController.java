@@ -19,7 +19,7 @@ import services.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Stateless
-@Path("/member")
+@Path("")
 public class MemberController {
     @Inject
     private DBConnectionService db;
@@ -38,13 +38,13 @@ public class MemberController {
     }
 
     @GET
-    @Path("profile")
+    @Path("member")
     @Produces({MediaType.APPLICATION_JSON})
     public Response profileGET(@Context HttpHeaders hh) {
         try {
             BasicResponse res = new BasicResponse();
             MemberService service = new MemberService();
-            res.setData(service.getMemberRegistration(db.getConnection()));
+            res=service.getMemberRegistration(db.getConnection());
             res.setStatus(0);
             res.setMessage("success");
             return Response.ok().entity(res).build();
@@ -55,7 +55,7 @@ public class MemberController {
     }
 
     @POST
-    @Path("registration")
+    @Path("member")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response RegistrationPOST(@Context HttpHeaders hh,String request) {

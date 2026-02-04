@@ -11,7 +11,7 @@ import java.util.concurrent.Executor;
 @ApplicationScoped
 public class DBConnectionService {
     private static final String URL =
-            "jdbc:mysql://localhost:3306/Main";
+            "jdbc:mysql://127.0.0.1:3306/Deploy";
     private static final String USER = "root";
     private static final String PASSWORD = "UPKFA<72-(";
 

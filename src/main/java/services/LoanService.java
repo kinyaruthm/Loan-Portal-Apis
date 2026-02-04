@@ -16,7 +16,7 @@ public class LoanService {
     public static BasicResponse getLoans(Connection conx) {
         BasicResponse response = new BasicResponse();
         try{
-            PreparedStatement ps= conx.prepareStatement("SELECT * FROM Main.Loans");
+            PreparedStatement ps= conx.prepareStatement("SELECT * FROM Deploy.Loans");
             ArrayList<LoanResponse> loans = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
@@ -39,14 +39,14 @@ public class LoanService {
     public static BasicResponse InsertLoans(Connection conx, LoanRequest request) {
         BasicResponse response = new BasicResponse();
         try{
-            PreparedStatement ps= conx.prepareStatement("SELECT * FROM Main.Loans WHERE LoanId=?");
+            PreparedStatement ps= conx.prepareStatement("SELECT * FROM Deploy.Loans WHERE LoanId=?");
             ps.setString(1, request.getLoanId());
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 response.setStatus(-1);
                 response.setMessage("Loan already exists");
             }else{
-                ps=conx.prepareStatement("INSERT INTO Main.Loans(LoanId,LoanName,LoanAmount,LoanStatus,Period,MemberNo) VALUES(?,?,?,?,?,?)");
+                ps=conx.prepareStatement("INSERT INTO Deploy.Loans(LoanId,LoanName,LoanAmount,LoanStatus,Period,MemberNumber) VALUES(?,?,?,?,?,?)");
                 ps.setString(1, request.getLoanId());
                 ps.setString(2, request.getLoanName());
                 ps.setDouble(3, request.getLoanAmount());
@@ -67,7 +67,7 @@ public class LoanService {
     public static BasicResponse ApproveLoans(Connection conx, LoanRequest request) {
         BasicResponse response = new BasicResponse();
         try{
-            PreparedStatement ps= conx.prepareStatement("SELECT * FROM Main.Loans WHERE LoanId=? AND LoanStatus= ? ");
+            PreparedStatement ps= conx.prepareStatement("SELECT * FROM Deploy.Loans WHERE LoanId=? AND LoanStatus= ? ");
             ps.setString(1, request.getLoanId());
             ps.setString(2, "NEW");
             ResultSet rs = ps.executeQuery();
@@ -75,7 +75,7 @@ public class LoanService {
                 response.setStatus(-1);
                 response.setMessage("Loan not in a status it can be approved");
             }else{
-                ps=conx.prepareStatement("UPDATE Main.Loans SET LoanStatus=? WHERE LoanId=? AND LoanStatus= ? AND MemberNumber=?");
+                ps=conx.prepareStatement("UPDATE Deploy.Loans SET LoanStatus=? WHERE LoanId=? AND LoanStatus= ? AND MemberNumber=?");
                 ps.setString(1, "Approved");
                 ps.setString(2, request.getLoanId());
                 ps.setString(3, "NEW");

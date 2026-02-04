@@ -1,6 +1,7 @@
 package contoller;
 
 
+import dtos.requests.MemberRegRequest;
 import dtos.response.BasicResponse;
 import dtos.response.RegistrationResponse;
 import jakarta.annotation.PostConstruct;
@@ -16,11 +17,6 @@ import jakarta.ws.rs.core.Response;
 import services.DBConnectionService;
 import services.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @Stateless
 @Path("/member")
@@ -66,11 +62,9 @@ public class MemberController {
         try {
             ObjectMapper mapper = new ObjectMapper();
             BasicResponse res = new BasicResponse();
-            RegistrationResponse req=mapper.readValue(request, RegistrationResponse.class);
             MemberService service = new MemberService();
-            res.setData(service.getMemberRegistration(db.getConnection()));
-            res.setStatus(0);
-            res.setMessage("success");
+            MemberRegRequest req=mapper.readValue(request, MemberRegRequest.class);
+            res=service.RegisterMember(db.getConnection(),req);
             return Response.ok().entity(res).build();
         } catch (Throwable ex) {
             System.out.println(ex.getMessage());

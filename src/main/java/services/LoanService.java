@@ -4,6 +4,7 @@ import dtos.requests.LoanRequest;
 import dtos.response.BasicResponse;
 import dtos.response.LoanResponse;
 import dtos.response.RegistrationResponse;
+import dtos.response.SavingsResponse;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -89,5 +90,25 @@ public class LoanService {
             throw new RuntimeException(e);
         }
         return response;
+    }
+
+    //eligibility check: Minimum savings 2000, loan eligible amount should be 3 times the savings
+    public static Boolean checkEligibility(Connection conx,Double loanAmount,String MemberNo) {
+        Boolean qualifies = false;
+        try{
+            SavingsResponse res=SavingService.getSavingsperMember(conx,MemberNo);
+            if(res.getAmount()>= 2000){
+                Double eligibleAmount=res.getAmount()* 3;
+                if(loanAmount <= eligibleAmount){
+                    qualifies=true;
+                }
+            }else {
+                qualifies=false;
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return qualifies;
     }
 }

@@ -65,7 +65,15 @@ public class LoanContoller {
             LoanService service = new LoanService();
             LoanRequest request=mapper.readValue(requestStr, LoanRequest.class);
             if(request.getAction().equalsIgnoreCase("new")){
-                res=service.InsertLoans(db.getConnection(),request);
+                //check eligibility
+                Boolean eligible=false;
+                eligible=service.checkEligibility(db.getConnection(), request.getLoanAmount(), request.getMemberNumber());
+                if(eligible){
+                    res=service.InsertLoans(db.getConnection(),request);
+                }else{
+                    res.setMessage("you are not eligible for this loan");
+                    res.setStatus(-1);
+                }
             }else if(request.getAction().equalsIgnoreCase("approve")){
                 res=service.ApproveLoans(db.getConnection(),request);
             }else if(request.getAction().equalsIgnoreCase("post")){

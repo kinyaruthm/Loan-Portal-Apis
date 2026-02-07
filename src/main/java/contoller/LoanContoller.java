@@ -2,6 +2,7 @@ package contoller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.requests.LoanRequest;
+import dtos.requests.LoginRequest;
 import dtos.response.BasicResponse;
 import dtos.response.RegistrationResponse;
 import jakarta.annotation.PostConstruct;
@@ -16,6 +17,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import services.DBConnectionService;
 import services.LoanService;
+import services.LoginService;
 import services.MemberService;
 
 @Stateless
@@ -42,13 +44,21 @@ public class LoanContoller {
     @Produces({MediaType.APPLICATION_JSON})
     public Response loanGET(@Context HttpHeaders hh) {
         try {
+
             BasicResponse res = new BasicResponse();
+            LoginService login=new LoginService();
+            LoginRequest session = login.validateMemberToken(hh);
+            if(session == null || session.getMemberToken() == null){
+                res.setStatus(-1);
+                res.setMessage("Invalid Member Token");
+                return Response.status(Response.Status.FORBIDDEN).entity(res).build();
+            }
             LoanService service = new LoanService();
             res=service.getLoans(db.getConnection());
             res.setStatus(0);
             res.setMessage("success");
             return Response.ok().entity(res).build();
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("error").build();
         }
@@ -62,6 +72,13 @@ public class LoanContoller {
         try {
             ObjectMapper mapper = new ObjectMapper();
             BasicResponse res = new BasicResponse();
+            LoginService login=new LoginService();
+            LoginRequest session = login.validateMemberToken(hh);
+            if(session == null || session.getMemberToken() == null){
+                res.setStatus(-1);
+                res.setMessage("Invalid Member Token");
+                return Response.status(Response.Status.FORBIDDEN).entity(res).build();
+            }
             LoanService service = new LoanService();
             LoanRequest request=mapper.readValue(requestStr, LoanRequest.class);
             if(request.getAction().equalsIgnoreCase("new")){
@@ -76,12 +93,14 @@ public class LoanContoller {
                 }
             }else if(request.getAction().equalsIgnoreCase("approve")){
                 res=service.ApproveLoans(db.getConnection(),request);
-            }else if(request.getAction().equalsIgnoreCase("post")){
-                res=service.InsertLoans(db.getConnection(),request);
-            }else {
-                //reject
-                res=service.InsertLoans(db.getConnection(),request);
+            }else if(request.getAction().equalsIgnoreCase("post")) {
+                //implement a loan disbursment
+                res = service.InsertLoans(db.getConnection(), request);
             }
+//            }else {
+//                //reject
+//                res=service.InsertLoans(db.getConnection(),request);
+//            }
 
             return Response.ok().entity(res).build();
         } catch (Throwable ex) {

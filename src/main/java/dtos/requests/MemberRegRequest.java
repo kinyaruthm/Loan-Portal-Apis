@@ -11,7 +11,6 @@ public class MemberRegRequest {
     private String dateOfBirth;
     private String salaryAcc;
 
-
     public String getPayrollNo() {
         return payrollNo;
     }
@@ -83,4 +82,6 @@ public class MemberRegRequest {
     public void setSalaryAcc(String salaryAcc) {
         this.salaryAcc = salaryAcc;
     }
+
+
 }

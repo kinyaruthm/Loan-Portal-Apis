@@ -76,11 +76,14 @@ public class LoanService {
                 response.setStatus(-1);
                 response.setMessage("Loan not in a status it can be approved");
             }else{
-                ps=conx.prepareStatement("UPDATE Deploy.Loans SET LoanStatus=? WHERE LoanId=? AND LoanStatus= ? AND MemberNumber=?");
+                ps=conx.prepareStatement("UPDATE Deploy.Loans SET LoanStatus=?, ApprovedBy=?, ApprovedDate=? WHERE LoanId=? AND LoanStatus= ? AND MemberNumber=?");
                 ps.setString(1, "Approved");
-                ps.setString(2, request.getLoanId());
-                ps.setString(3, "NEW");
-                ps.setString(4, request.getMemberNumber());
+                ps.setString(2, request.getApprovedBy());
+                ps.setString(3, request.getApprovedDate());
+                ps.setString(4, request.getLoanId());
+                ps.setString(5, "NEW");
+                ps.setString(6, request.getMemberNumber());
+
                 ps.executeUpdate();
                 response.setStatus(0);
                 response.setMessage("Successfully updated");

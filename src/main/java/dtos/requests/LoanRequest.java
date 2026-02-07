@@ -8,6 +8,8 @@ public class LoanRequest {
     private String loanStatus;
     private double loanAmount;
     private int period;
+    private String approvedBy;
+    private String approvedDate;
 
     public String getLoanId() {
         return loanId;
@@ -63,5 +65,21 @@ public class LoanRequest {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public String getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(String approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+
+    public String getApprovedDate() {
+        return approvedDate;
+    }
+
+    public void setApprovedDate(String approvedDate) {
+        this.approvedDate = approvedDate;
     }
 }

@@ -11,6 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
+/src/src/test/java/UnitTest.java
 
 ### Eclipse ###
 .apt_generated

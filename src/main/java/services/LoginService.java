@@ -27,7 +27,9 @@ public class LoginService {
                 request.setMemberToken(UUID.randomUUID().toString() + "." + UUID.randomUUID().toString());
                 response.setMessage("Successfully logged in");
                 response.setData(request.getMemberToken());
+                response.setStatus(0);
             }else {
+                response.setStatus(-1);
                 response.setMessage("Invalid username or password");
             }
 

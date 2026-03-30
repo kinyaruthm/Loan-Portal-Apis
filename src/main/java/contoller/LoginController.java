@@ -36,7 +36,6 @@ public class LoginController {
             LoginRequest request=mapper.readValue(requestStr, LoginRequest.class);
             res = service.login(db.getConnection(), request);
             LoginService.addLoginSession(request.getMemberToken(), request);
-            res.setStatus(0);
             return Response.ok().entity(res).build();
         } catch (Throwable ex) {
             System.out.println(ex.getMessage());

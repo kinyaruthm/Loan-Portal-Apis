@@ -46,15 +46,40 @@ public class LoanContoller {
         try {
 
             BasicResponse res = new BasicResponse();
-            LoginService login=new LoginService();
+            LoginService login = new LoginService();
             LoginRequest session = login.validateMemberToken(hh);
-            if(session == null || session.getMemberToken() == null){
+            if (session == null || session.getMemberToken() == null) {
                 res.setStatus(-1);
                 res.setMessage("Invalid Member Token");
                 return Response.status(Response.Status.FORBIDDEN).entity(res).build();
             }
             LoanService service = new LoanService();
-            res=service.getLoans(db.getConnection());
+            res = service.getLoans(db.getConnection());
+            res.setStatus(0);
+            res.setMessage("success");
+            return Response.ok().entity(res).build();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("error").build();
+        }
+    }
+
+    @GET
+    @Path("loanstus")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response loansGET(@Context HttpHeaders hh,@QueryParam("loan_id")String loan_id) {
+        try {
+
+            BasicResponse res = new BasicResponse();
+//            LoginService login=new LoginService();
+//            LoginRequest session = login.validateMemberToken(hh);
+//            if(session == null || session.getMemberToken() == null){
+//                res.setStatus(-1);
+//                res.setMessage("Invalid Member Token");
+//                return Response.status(Response.Status.FORBIDDEN).entity(res).build();
+//            }
+            LoanService service = new LoanService();
+            res=service.getLoanStatus(db.getConnection(),loan_id);
             res.setStatus(0);
             res.setMessage("success");
             return Response.ok().entity(res).build();

@@ -37,6 +37,31 @@ public class LoanService {
         return response;
     }
 
+    public static BasicResponse getLoanStatus(Connection conx,String loan_id) {
+        BasicResponse response = new BasicResponse();
+        ArrayList<LoanResponse> loans = new ArrayList<>();
+        try{
+            PreparedStatement ps= conx.prepareStatement("SELECT * FROM Deploy.Loans where LoanId = ?");
+            ps.setString(1, loan_id);
+
+            ResultSet rs = ps.executeQuery();
+            LoanResponse res = new LoanResponse();
+            if(rs.next()){
+                res.setLoanId(rs.getString("LoanId"));
+                res.setLoanName(rs.getString("LoanName"));
+                res.setLoanAmount(rs.getDouble("LoanAmount"));
+                res.setLoanStatus(rs.getString("LoanStatus"));
+                res.setPeriod(rs.getInt("Period"));
+                res.setMemberNumber(rs.getString("MemberNumber"));
+            }
+            response.setData(res);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return response;
+    }
+
+
     public static BasicResponse InsertLoans(Connection conx, LoanRequest request) {
         BasicResponse response = new BasicResponse();
         try{

@@ -3,6 +3,7 @@ package contoller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.requests.LoginRequest;
 import dtos.response.BasicResponse;
+import dtos.response.LoginResponse;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -35,7 +36,6 @@ public class LoginController {
             ObjectMapper mapper = new ObjectMapper();
             LoginRequest request=mapper.readValue(requestStr, LoginRequest.class);
             res = service.login(db.getConnection(), request);
-            LoginService.addLoginSession(request.getMemberToken(), request);
             return Response.ok().entity(res).build();
         } catch (Throwable ex) {
             System.out.println(ex.getMessage());

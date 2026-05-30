@@ -72,4 +72,12 @@ public class BasicResponse {
         return basicResponse;
     }
 
+    public BasicResponse(int status, String message, Object data) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+    }
+
+    public BasicResponse() {
+    }
 }

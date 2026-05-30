@@ -5,6 +5,7 @@ import dtos.requests.LoginRequest;
 import dtos.requests.MemberRegRequest;
 import dtos.requests.SavingsRequest;
 import dtos.response.BasicResponse;
+import dtos.response.LoginResponse;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -28,7 +29,7 @@ public class SavingController {
 
             BasicResponse res = new BasicResponse();
             LoginService login=new LoginService();
-            LoginRequest session = login.validateMemberToken(hh);
+            LoginResponse session = login.validateMemberToken(hh);
             if(session == null || session.getMemberToken() == null){
                 res.setStatus(-1);
                 res.setMessage("Invalid Member Token");
@@ -53,7 +54,7 @@ public class SavingController {
             ObjectMapper mapper = new ObjectMapper();
             BasicResponse res = new BasicResponse();
             LoginService login=new LoginService();
-            LoginRequest session = login.validateMemberToken(hh);
+            LoginResponse session = login.validateMemberToken(hh);
             if(session == null || session.getMemberToken() == null){
                 res.setStatus(-1);
                 res.setMessage("Invalid Member Token");

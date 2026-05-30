@@ -4,7 +4,6 @@ public class LoginRequest {
     private String username;
     private String password;
     private String memberToken;
-
     public enum Role {
         ADMIN,
         LOAN_OFFICER,

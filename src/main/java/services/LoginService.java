@@ -2,6 +2,7 @@ package services;
 
 import dtos.requests.LoginRequest;
 import dtos.response.BasicResponse;
+import dtos.response.LoginResponse;
 import dtos.response.RegistrationResponse;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -24,9 +25,13 @@ public class LoginService {
             ps.setString(2, request.getPassword());
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                request.setMemberToken(UUID.randomUUID().toString() + "." + UUID.randomUUID().toString());
+                LoginResponse loginResponse = new LoginResponse();
+                loginResponse.setMemberNo(rs.getString("MemberNo"));
+                loginResponse.setMemberToken(UUID.randomUUID().toString() + "." + UUID.randomUUID().toString());
+                LoginResponse session = new LoginResponse(loginResponse.getMemberNo(), loginResponse.getMemberToken());
+                loginsession.put(loginResponse.getMemberToken(), session);
                 response.setMessage("Successfully logged in");
-                response.setData(request.getMemberToken());
+                response.setData(loginResponse);
                 response.setStatus(0);
             }else {
                 response.setStatus(-1);
@@ -39,18 +44,18 @@ public class LoginService {
         return response;
     }
 
-    private static Map<String, LoginRequest> loginsession = new HashMap<>();
+    private static Map<String, LoginResponse> loginsession = new HashMap<>();
 
-    public static void addLoginSession(String memberToken, LoginRequest loggedInSession) {
+    public static void addLoginSession(String memberToken, LoginResponse loggedInSession) {
         loginsession.put(memberToken, loggedInSession);
     }
 
-    public LoginRequest validateMemberToken(HttpHeaders hh) {
+    public LoginResponse validateMemberToken(HttpHeaders hh) {
 
         MultivaluedMap<String, String> headerParams = hh.getRequestHeaders();
         String memberToken = headerParams.getFirst("MemberToken");
 
-        if (loginsession.containsKey(memberToken)) {
+        if (memberToken != null && loginsession.containsKey(memberToken)) {
             return loginsession.get(memberToken);
         }
 
